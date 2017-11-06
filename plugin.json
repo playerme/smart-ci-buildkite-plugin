@@ -1,0 +1,9 @@
+{
+  "name": "smartci",
+  "description": "Runs your build steps using CloudSmartCI",
+  "author": "mak@player.me",
+  "public": false,
+  "requirements": [
+    "docker"
+  ]
+}
