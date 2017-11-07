@@ -32,20 +32,20 @@ args=(
 
 if [[ "${BUILDKITE_PLUGIN_SMART_CI_MOUNT_SSH:-true}" =~ (true|on|1) ]] ; then
   args+=(
-    "--volume" "/root/.ssh:/root/.ssh"
+    "--volume" "/root/.ssh:/root/.ssh:ro"
   )
 fi
 
 if [[ "${BUILDKITE_PLUGIN_SMART_CI_MOUNT_GCLOUD:-true}" =~ (true|on|1) ]] ; then
   args+=(
-    "--volume" "/root/.config:/root/.config"    
+    "--volume" "/root/.config:/root/.config:ro"
   )
 fi
 
 if [[ "${BUILDKITE_PLUGIN_SMART_CI_MOUNT_DOCKER:-true}" =~ (true|on|1) ]] ; then
   args+=(
-    "--volume" "/root/.docker:/root/.docker"
-    "--volume" "/var/run/docker.sock:/var/run/docker.sock"
+    "--volume" "/root/.docker:/root/.docker:ro"
+    "--volume" "/var/run/docker.sock:/var/run/docker.sock:ro"
   )
 fi
 
@@ -55,7 +55,7 @@ if [[ "${BUILDKITE_PLUGIN_SMART_CI_MOUNT_BUILDKITE_AGENT:-true}" =~ (true|on|1) 
     "--env" "BUILDKITE_JOB_ID"
     "--env" "BUILDKITE_BUILD_ID"
     "--env" "BUILDKITE_AGENT_ACCESS_TOKEN"
-    "--volume" "$(which buildkite-agent):/usr/bin/buildkite-agent"
+    "--volume" "$(which buildkite-agent):/usr/bin/buildkite-agent:ro"
   )
 fi
 
