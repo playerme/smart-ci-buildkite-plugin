@@ -36,9 +36,9 @@ if [[ "${BUILDKITE_PLUGIN_SMART_CI_MOUNT_SSH:-true}" =~ (true|on|1) ]] ; then
   )
 fi
 
-if [[ "${BUILDKITE_PLUGIN_SMART_CI_MOUNT_GCLOUD:-true}" =~ (true|on|1) ]] ; then
+if [[ "${BUILDKITE_PLUGIN_SMART_CI_MOUNT_SECRETS:-true}" =~ (true|on|1) ]] ; then
   args+=(
-    "--volume" "/root/.config:/root/.config:ro"
+    "--volume" "/buildkite-secrets:/buildkite-secrets:ro"
   )
 fi
 
