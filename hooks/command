@@ -95,13 +95,16 @@ EOF
   echo $PWD/.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/pre-command
 
   if [[ -e $PWD/.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/pre-command ]] ; then
+    echo "echo \"--- :docker: :house_with_garden: Running pre-command hook\"" >> $PWD/$BUILDKITE_BUILD_ID
     echo "./.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/pre-command" >> $PWD/$BUILDKITE_BUILD_ID
   fi
 
   # the actual command
+  echo "echo \"--- :docker: Running ${BUILDKITE_COMMAND} in ${BUILDKITE_PLUGIN_SMART_CI_IMAGE}\"" >> $PWD/$BUILDKITE_BUILD_ID
   echo $(echo $BUILDKITE_PLUGIN_SMART_CI_ENTRYPOINT) "${BUILDKITE_COMMAND}" >> $PWD/$BUILDKITE_BUILD_ID
 
   if [[ -e $PWD/.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/post-command ]] ; then
+    echo "echo \"--- :docker: :house_with_garden: Running post-command hook\"" >> $PWD/$BUILDKITE_BUILD_ID
     echo "./.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/post-command" >> $PWD/$BUILDKITE_BUILD_ID
   fi
 
