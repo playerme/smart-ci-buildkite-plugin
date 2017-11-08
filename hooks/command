@@ -95,14 +95,14 @@ EOF
   echo $PWD/.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/pre-command
 
   if [[ -e $PWD/.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/pre-command ]] ; then
-    echo "./.buildkite/smartci-hooks/pre-command" >> $PWD/$BUILDKITE_BUILD_ID
+    echo "./.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/pre-command" >> $PWD/$BUILDKITE_BUILD_ID
   fi
 
   # the actual command
   echo $(echo $BUILDKITE_PLUGIN_SMART_CI_ENTRYPOINT) "${BUILDKITE_COMMAND}" >> $PWD/$BUILDKITE_BUILD_ID
 
   if [[ -e $PWD/.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/post-command ]] ; then
-    echo "./.buildkite/smartci-hooks/post-command" >> $PWD/$BUILDKITE_BUILD_ID
+    echo "./.buildkite/$BUILDKITE_PLUGIN_SMART_CI_HOOKS_DIRECTORY/post-command" >> $PWD/$BUILDKITE_BUILD_ID
   fi
 
   # make it executable
