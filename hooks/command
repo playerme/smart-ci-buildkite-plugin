@@ -75,9 +75,36 @@ done < <(env | sort)
 
 if [[ "${BUILDKITE_PLUGIN_SMART_CI_ALWAYS_PULL:-false}" =~ (true|on|1) ]] ; then
   echo "--- :docker: Pulling ${BUILDKITE_PLUGIN_SMART_CI_IMAGE}:${BUILDKITE_PLUGIN_SMART_CI_TAG}"
-  docker pull "${BUILDKITE_PLUGIN_SMART_CI_IMAGE}":"${BUILDKITE_PLUGIN_SMART_CI_TAG}"
+  echo docker pull "${BUILDKITE_PLUGIN_SMART_CI_IMAGE}":"${BUILDKITE_PLUGIN_SMART_CI_TAG}"
 fi
 
-echo "--- :docker: Running ${BUILDKITE_COMMAND} in ${BUILDKITE_PLUGIN_SMART_CI_IMAGE}"
 
-docker run "${args[@]}" "${BUILDKITE_PLUGIN_SMART_CI_IMAGE}":"${BUILDKITE_PLUGIN_SMART_CI_TAG}" $(echo $BUILDKITE_PLUGIN_SMART_CI_ENTRYPOINT) "${BUILDKITE_COMMAND}"
+if [[ "${BUILDKITE_PLUGIN_SMART_CI_RAW_COMMAND:-false}" =~ (true|on|1) ]] ; then
+  echo "--- :docker: Running ${BUILDKITE_COMMAND} in ${BUILDKITE_PLUGIN_SMART_CI_IMAGE}"
+  docker run "${args[@]}" "${BUILDKITE_PLUGIN_SMART_CI_IMAGE}":"${BUILDKITE_PLUGIN_SMART_CI_TAG}" $(echo $BUILDKITE_PLUGIN_SMART_CI_ENTRYPOINT) "${BUILDKITE_COMMAND}"
+else
+  # create the entrypoint file
+  cat > $PWD/$BUILDKITE_BUILD_ID <<EOF
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+EOF
+
+  if [[ -e $PWD/.buildkite/smartci-hooks/pre-command ]] ; then
+    echo "./.buildkite/smartci-hooks/pre-command" >> $PWD/$BUILDKITE_BUILD_ID
+  fi
+
+  # the actual command
+  echo $(echo $BUILDKITE_PLUGIN_SMART_CI_ENTRYPOINT) "${BUILDKITE_COMMAND}" >> $PWD/$BUILDKITE_BUILD_ID
+
+  if [[ -e $PWD/.buildkite/smartci-hooks/post-command ]] ; then
+    echo "./.buildkite/smartci-hooks/post-command" >> $PWD/$BUILDKITE_BUILD_ID
+  fi
+
+  # make it executable
+  chmod +x $PWD/$BUILDKITE_BUILD_ID
+
+  docker run "${args[@]}" "${BUILDKITE_PLUGIN_SMART_CI_IMAGE}":"${BUILDKITE_PLUGIN_SMART_CI_TAG}" ./$BUILDKITE_BUILD_ID
+fi
