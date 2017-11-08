@@ -81,7 +81,7 @@ fi
 
 if [[ "${BUILDKITE_PLUGIN_SMART_CI_RAW_COMMAND:-false}" =~ (true|on|1) ]] ; then
   echo "--- :docker: Running ${BUILDKITE_COMMAND} in ${BUILDKITE_PLUGIN_SMART_CI_IMAGE}"
-  echo docker run "${args[@]}" "${BUILDKITE_PLUGIN_SMART_CI_IMAGE}":"${BUILDKITE_PLUGIN_SMART_CI_TAG}" $(echo $BUILDKITE_PLUGIN_SMART_CI_ENTRYPOINT) "${BUILDKITE_COMMAND}"
+  docker run "${args[@]}" "${BUILDKITE_PLUGIN_SMART_CI_IMAGE}":"${BUILDKITE_PLUGIN_SMART_CI_TAG}" $(echo $BUILDKITE_PLUGIN_SMART_CI_ENTRYPOINT) "${BUILDKITE_COMMAND}"
 else
   # create the entrypoint file
   cat > $PWD/$BUILDKITE_BUILD_ID <<EOF
@@ -108,5 +108,5 @@ EOF
   # make it executable
   chmod +x $PWD/$BUILDKITE_BUILD_ID
 
-  echo docker run "${args[@]}" "${BUILDKITE_PLUGIN_SMART_CI_IMAGE}":"${BUILDKITE_PLUGIN_SMART_CI_TAG}" ./$BUILDKITE_BUILD_ID
+  docker run "${args[@]}" "${BUILDKITE_PLUGIN_SMART_CI_IMAGE}":"${BUILDKITE_PLUGIN_SMART_CI_TAG}" ./$BUILDKITE_BUILD_ID
 fi
