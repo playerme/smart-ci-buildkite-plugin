@@ -28,6 +28,7 @@ fi
 
 args=(
   "-it"
+  "--network=host"
   "--rm"
   "--env" "BUILDKITE_BRANCH"
   "--env" "BUILDKITE_COMMIT"
